@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           Int          @id @default(autoincrement())
+  email        String       @unique
+  password     String
+  name         String
+  departments  Department[] // Admin manages Departments
+  notifications Notification[] // Admin receives Notifications
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Department {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  adminId   Int
+  admin     Admin      @relation(fields: [adminId], references: [id])
+  employees Employee[] // Department contains Employees
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Employee {
+  id            Int          @id @default(autoincrement())
+  email         String       @unique
+  password      String
+  name          String
+  departmentId  Int
+  department    Department   @relation(fields: [departmentId], references: [id])
+  faceDescriptor Json        // Stores face-api.js descriptor (128-number array)
+  attendances   Attendance[] // Employee has Attendance records
+  notifications Notification[] // Employee linked to Notifications
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Attendance {
+  id            Int      @id @default(autoincrement())
+  employeeId    Int
+  employee      Employee @relation(fields: [employeeId], references: [id])
+  checkIn       DateTime
+  checkOut      DateTime?
+  workingHours  Float?   // Calculated as (checkOut - checkIn) in hours
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  adminId     Int
+  admin       Admin    @relation(fields: [adminId], references: [id])
+  employeeId  Int
+  employee    Employee @relation(fields: [employeeId], references: [id])
+  message     String   // E.g., "Employee X has 3 violations"
+  priority    Int      // 3 for absence, 2 for low hours, 1 for others
+  delivered   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
