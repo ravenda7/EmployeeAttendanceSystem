@@ -8,26 +8,27 @@ import { useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import EditProfileForm from '@/components/form/edit-profile-form';
 import { useQuery } from '@tanstack/react-query';
+import ChangePasswordForm from '@/components/form/change-password-form';
 
 export default function AdminProfile() {
-  // const { data: session, status } = useSession();
-  // const router = useRouter();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   if (status === 'loading') return;
-  //   if (!session || !session.user) {
-  //     router.push('/');
-  //   }
-  // }, [session, status, router]);
+  useEffect(() => {
+    if (status === 'loading') return;
+    if (!session || !session.user) {
+      router.push('/');
+    }
+  }, [session, status, router]);
 
-  // if (status === 'loading') {
-  //   return <Loader />;
-  // }
+  if (status === 'loading') {
+    return <Loader />;
+  }
 
-  // if (!session || !session.user) {
-  //   return null;
-  // }
-    const { data, isLoading } = useQuery({
+  if (!session || !session.user) {
+    return null;
+  }
+    const { data } = useQuery({
     queryKey: ["admin-profile"],
     queryFn: async () => {
       const res = await fetch("/api/admin/me");
@@ -36,8 +37,6 @@ export default function AdminProfile() {
     },
   });
 
-  if (isLoading) return <Loader />;
-  if (!data) return <p>No profile found.</p>;
 
   return (
     <>
@@ -56,7 +55,9 @@ export default function AdminProfile() {
                     email={data.email || ''}
                 />
             </TabsContent>
-            <TabsContent value="password">Change your password here.</TabsContent>
+            <TabsContent value="password">
+              <ChangePasswordForm id={data.id} />
+            </TabsContent>
             </Tabs>
         </div>
       </div>

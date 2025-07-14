@@ -36,12 +36,12 @@ const data = {
     },
     {
       title: "All Employees",
-      url: "#",
+      url: "/admin/employee",
       icon: Users,
     },
     {
       title: "Departments",
-      url: "#",
+      url: "/admin/department",
       icon: Building2,
     },
   ],
@@ -62,9 +62,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
   }, [session, status, router]);
 
-  if (isLoading || status === "loading") {
-    return <Loader />;
-  }
+  // if (isLoading || status === "loading") {
+  //   return <Loader />;
+  // }
 
   if (!session || !session.user || !profile) {
     return null;
@@ -81,16 +81,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <Link
                 href="/admin/dashboard"
-                className="flex items-center justify-between gap-2 px-2"
+                className="flex items-center gap-4"
               >
-                <Image
-                  src="/logo.svg"
-                  alt="Logo"
-                  width={100}
-                  height={100}
-                  className="w-28 h-28"
-                />
-                <Badge variant="secondary">Admin</Badge>
+                <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-sm text-center px-3 py-2">
+                  <span className="text-white text-2xl font-bold">AT</span>
+                </div>
+                <div className="flex flex-col gap-1">
+                <h2 className="text-gray-950 font-semibold text-lg">Attendlytics</h2>
+                <Badge variant="secondary" className="text-[10px]">Admin Panel</Badge>
+                </div>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -102,13 +101,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
 
       <SidebarFooter>
+        { isLoading ? (
+          <Loader />
+        )
+        :(
         <NavUser
           user={{
             name: profile.name ?? "",
             email: profile.email ?? "",
             avatar: profile.name ?? "",
           }}
-        />
+        />)}
       </SidebarFooter>
     </Sidebar>
   );

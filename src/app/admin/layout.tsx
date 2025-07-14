@@ -23,7 +23,11 @@ export default function AdminLayout({
     }, [session, status, router]);
   
     if (status === 'loading') {
-      return <Loader />;
+      return (
+      <div className="flex h-screen w-full justify-center items-center">
+        <Loader />
+      </div>
+      );
     }
   
     if (!session || !session.user) {

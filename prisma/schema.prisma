@@ -34,6 +34,8 @@ model Employee {
   email         String       @unique
   password      String
   name          String
+  avatarUrl     String?      // Optional avatar URL
+  isActive      Boolean      @default(true) // Employee can be deactivated
   departmentId  Int
   department    Department   @relation(fields: [departmentId], references: [id])
   faceDescriptor Json        // Stores face-api.js descriptor (128-number array)

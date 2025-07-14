@@ -1,13 +1,9 @@
 "use client";
-import AddAdminDialog from "@/components/admin/add-admin-dialog";
 import { SiteHeader } from "@/components/admin/site-header";
 import { Loader } from "@/components/loader";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import dynamic from "next/dynamic"
+import { useEffect } from "react";
 import { Suspense } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import AdminTable from "@/components/admin/admin-table";
@@ -15,7 +11,6 @@ import AdminTable from "@/components/admin/admin-table";
 export default function ManageAdminPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
-    const [dialogOpen, setDialogOpen] = useState(false);
 
     useEffect(() => {
     if (status === 'loading') return;
